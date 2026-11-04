@@ -1,0 +1,19 @@
+name: activity_prediction
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7.12
+  - numpy=1.21.5
+  - pandas=0.23.4
+  - joblib=1.1.0
+  - tqdm=4.62.3
+  - scikit-learn=1.0.2
+  # XGBoost split packages (legacy style)
+  - _py-xgboost-mutex=2.0=cpu_0
+  - libxgboost=0.90
+  - py-xgboost=0.90
+  # Cheminformatics
+  - rdkit=2021.09.4
+  - oddt=0.7
+  - openbabel=3.1.1

@@ -1,0 +1,4 @@
+Notes on dataset actives 
+
+- bis-cp57 is S-Adenosyl-L-homocysteine (SAH).
+- bis-cp18 is Sinefungin, which has multiple IC50 values reported in the literature.
