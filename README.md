@@ -6,7 +6,7 @@ This repository provides top-performing, target-specific Machine Learning Scorin
 
 ## Contents
 
-[Dataset](#dataset) · [Models](#models) · [NSP14_protein_structure](#protein-structure) · [Installation](#installation) · [How to Use](#how-to-use) · [Repository Structure](#repository-structure) · [Citation](#citation) · [License](#license) · [Contact](#contact)
+[Dataset](#dataset) · [Models](#models) · [Installation](#installation) · [How to Use](#how-to-use) · [Repository Structure](#repository-structure) · [Citation](#citation) · [License](#license) · [Contact](#contact)
 
 ## Dataset
 
@@ -35,9 +35,6 @@ The available model files are listed below:
 | FRED-derived PLEC fingerprints | `NSP14-XGB-FRED.json` | `NSP14-SVM-FRED.joblib` | **0.702 / 0.702** | **1.53 / 1.61** |
 
 
-
-## Protein Structure
-- The `NSP14_protein_structure/` folder contains the prepared NSP14 MTase receptor (PDB ID: 9R5T) used in this study and the provided Example. 
 ## Installation
 Use the provided Conda environment (Miniconda or Anaconda required) to avoid dependency conflicts:
 
@@ -54,7 +51,7 @@ The pipeline has three steps: docking, fingerprints generation, and activity pre
 
 ### Step 1: Docking (PLEC models only)
 
-1. Dock the prepared ligands against the prepared NSP14 MTase structure provided in `NSP14_protein_structure/NSP14-9R5T.mol2` using PLANTS, FRED, or Smina.
+1. Dock the prepared ligands against the prepared NSP14 MTase structure (PDB ID: 9R5T) provided in `/example` folder using PLANTS, FRED, or Smina.
 
 2. Extract the top-ranked pose for each ligand and combine them into a single `.mol2` file.
 ### Step 2: Generate fingerprints
@@ -74,7 +71,7 @@ python scripts/01_generate_fingerprints.py --type ecfp4 \
 ```bash
 python scripts/01_generate_fingerprints.py --type plec \
     --mol_path example/compounds/plants-docked-compounds.mol2 \
-    --receptor_path "NSP14_protein_structure/NSP14-9R5T.mol2" \
+    --receptor_path examle/NSP14-9R5T.mol2 \
     --output_csv example/features/features.csv
 ```
 
@@ -101,6 +98,8 @@ The `example/` folder is organized into three subfolders:
 - `example/compounds/`: the input compounds used to generate fingerprints. 
 - `example/features/`: the generated fingerprints. 
 - `example/predictions/`: the predicted activities.
+- `example/NSP14-9R5T.mol2`:  the prepared NSP14 MTase receptor (PDB ID: 9R5T) used in this study and the provided Example.
+
 ### Notes
 - **The model must match its features.** Re-score poses with the model trained on the same docking tool (PLANTS poses → PLANTS model, etc.). Don't mix feature types or docking tools (e.g. FRED poses with a PLANTS model, or ECFP4 features with a PLEC model): predictions will be unreliable or fail with a feature-count error.
 - **Compound names** come from molecule titles in the input file; missing titles become `mol_0`, `mol_1`, etc.
@@ -120,8 +119,6 @@ The `example/` folder is organized into three subfolders:
 │   ├── NSP14-XGB-FRED.json
 │   ├── NSP14-XGB-PLANTS.json
 │   └── NSP14-XGB-Smina.json
-├── NSP14_protein_structure/
-│   └── NSP14-9R5T.mol2
 ├── dataset/
 │   ├── LICENSE
 │   ├── full_sets/
@@ -136,8 +133,10 @@ The `example/` folder is organized into three subfolders:
 │   │   └── plants-docked-compounds.mol2
 │   ├── features/
 │   │   └── example_plec_features.csv
-│   └── predictions/
-│       └── example_predicted_activity.csv
+│   ├── predictions/
+│   │   └── example_predicted_activity.csv
+│   └── protein_structure/
+│       └── NSP14-9R5T.mol2
 └── LICENSE
 ```
 
