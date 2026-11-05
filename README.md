@@ -19,6 +19,7 @@ In addition, the repository includes the train-test split used for model develop
 | `dataset/train_test_split/` | `test_mol_names.txt`, `train_mol_names.txt` | Training and test sets used for model development and benchmarking. |
 
 ## Models
+The model development and evaluation workflow was adapted, with modifications, from the protocol described by [Tran-Nguyen et al. (2023)](https://doi.org/10.1038/s41596-023-00885-w).
 
 The `models/` directory contains eight pre-trained models, each combining an SVM or XGBoost algorithm with a specific feature representation. 
 
@@ -63,7 +64,7 @@ Run `python scripts/01_generate_fingerprints.py` for interactive prompts, or pas
 ```bash
 python scripts/01_generate_fingerprints.py --type ecfp4 \
     --mol_path compounds.sdf \
-    --output_csv features.csv
+    --output_csv ecfp4_features.csv
 ```
 
 **PLEC** (docked compounds + receptor, both `.mol2`):
@@ -71,8 +72,8 @@ python scripts/01_generate_fingerprints.py --type ecfp4 \
 ```bash
 python scripts/01_generate_fingerprints.py --type plec \
     --mol_path example/compounds/plants-docked-compounds.mol2 \
-    --receptor_path examle/NSP14-9R5T.mol2 \
-    --output_csv example/features/features.csv
+    --receptor_path example/NSP14-9R5T.mol2 \
+    --output_csv example/features/plants_plec_features.csv
 ```
 
 Optional: `--n_jobs` (CPU cores; default half your cores), `--verbose`.
@@ -84,8 +85,8 @@ Run `python scripts/02_predict_activity.py` for interactive model selection (lis
 ```bash
 python scripts/02_predict_activity.py \
     --model_path models/NSP14-SVM-PLANTS.joblib \
-    --features_csv example/features/features.csv \
-    --output_results example/predictions/predicted_activity.csv
+    --features_csv example/features/plants_plec_features.csv \
+    --output_results example/predictions/plants_plec_svm_predictions.csv
 ```
 Optional: 
 - `--n_jobs` (CPU cores; default half your cores, auto-skipped for single-threaded models like SVM), 
@@ -93,7 +94,7 @@ Optional:
 
 ### Example
 
-The `example/` folder is organized into three subfolders:
+The `example/` folder is organized into three subfolders and the NSP14 receptor file::
 
 - `example/compounds/`: the input compounds used to generate fingerprints. 
 - `example/features/`: the generated fingerprints. 
@@ -101,6 +102,7 @@ The `example/` folder is organized into three subfolders:
 - `example/NSP14-9R5T.mol2`:  the prepared NSP14 MTase receptor (PDB ID: 9R5T) used in this study and the provided Example.
 
 ### Notes
+- The file paths and names in the commands are provided as examples. Please replace them with the actual paths and filenames of your own dataset. 
 - **The model must match its features.** Re-score poses with the model trained on the same docking tool (PLANTS poses → PLANTS model, etc.). Don't mix feature types or docking tools (e.g. FRED poses with a PLANTS model, or ECFP4 features with a PLEC model): predictions will be unreliable or fail with a feature-count error.
 - **Compound names** come from molecule titles in the input file; missing titles become `mol_0`, `mol_1`, etc.
 ## Repository Structure
@@ -130,13 +132,12 @@ The `example/` folder is organized into three subfolders:
 │       └── train_mol_names.txt
 ├── example/
 │   ├── compounds/
-│   │   └── plants-docked-compounds.mol2
+│   │   └── example-docked-compounds.mol2
 │   ├── features/
-│   │   └── example_plec_features.csv
+│   │   └── example_features.csv
 │   ├── predictions/
 │   │   └── example_predicted_activity.csv
-│   └── protein_structure/
-│       └── NSP14-9R5T.mol2
+│   └── NSP14-9R5T.mol2
 └── LICENSE
 ```
 
